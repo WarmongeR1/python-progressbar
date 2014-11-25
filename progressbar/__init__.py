@@ -205,7 +205,7 @@ class ProgressBar(object):
 
     def percentage(self):
         'Returns the progress as a percentage.'
-        return self.currval * 100.0 / self.maxval
+        return self.currval * 100.0 / (self.maxval or 1)
 
     percent = property(percentage)
 

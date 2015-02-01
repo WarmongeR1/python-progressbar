@@ -84,11 +84,11 @@ class Timer(Widget):
 
     """Widget which displays the elapsed seconds."""
 
-    __slots__ = ('format',)
+    __slots__ = ('to_format',)
     TIME_SENSITIVE = True
 
-    def __init__(self, format='Elapsed Time: %s'):
-        self.format = format
+    def __init__(self, to_format='Elapsed Time: %s'):
+        self.to_format = to_format
 
     @staticmethod
     def format_time(seconds):
@@ -103,7 +103,7 @@ class Timer(Widget):
     def update(self, pbar):
         """Updates the widget to show the elapsed time."""
 
-        return self.format % self.format_time(pbar.seconds_elapsed)
+        return self.to_format % self.format_time(pbar.seconds_elapsed)
 
 
 class ETA(Timer):
@@ -129,15 +129,15 @@ class FileTransferSpeed(Widget):
 
     """Widget for showing the transfer speed (useful for file transfers)."""
 
-    format = '%6.2f %s%s/s'
+    to_format = '%6.2f %s%s/s'
     prefixes = ' kMGTPEZY'
-    __slots__ = ('unit', 'format')
+    __slots__ = ('unit', 'to_format')
 
     def __init__(self, unit='B'):
         self.unit = unit
 
     def update(self, pbar):
-        'Updates the widget with the current SI prefixed speed.'
+        """Updates the widget with the current SI prefixed speed."""
 
         if pbar.seconds_elapsed < 2e-6 or pbar.currval < 2e-6:  # =~ 0
             scaled = power = 0
@@ -146,7 +146,7 @@ class FileTransferSpeed(Widget):
             power = int(math.log(speed, 1000))
             scaled = speed / 1000. ** power
 
-        return self.format % (scaled, self.prefixes[power], self.unit)
+        return self.to_format % (scaled, self.prefixes[power], self.unit)
 
 
 class AnimatedMarker(Widget):
@@ -178,13 +178,13 @@ class Counter(Widget):
 
     """Displays the current count"""
 
-    __slots__ = ('format',)
+    __slots__ = ('to_format',)
 
-    def __init__(self, format='%d'):
-        self.format = format
+    def __init__(self, to_format='%d'):
+        self.to_format = to_format
 
     def update(self, pbar):
-        return self.format % pbar.currval
+        return self.to_format % pbar.currval
 
 
 class Percentage(Widget):
@@ -197,7 +197,7 @@ class Percentage(Widget):
 
 class FormatLabel(Timer):
 
-    """Displays a formatted label"""
+    """Displays a to_formatted label"""
 
     mapping = {
         'elapsed': ('seconds_elapsed', Timer.format_time),
@@ -209,10 +209,10 @@ class FormatLabel(Timer):
         'value': ('currval', None)
     }
 
-    __slots__ = ('format',)
+    __slots__ = ('to_format',)
 
-    def __init__(self, format):
-        self.format = format
+    def __init__(self, to_format):
+        self.to_format = to_format
 
     def update(self, pbar):
         context = {}
@@ -227,7 +227,7 @@ class FormatLabel(Timer):
             except:
                 pass
 
-        return self.format % context
+        return self.to_format % context
 
 
 class SimpleProgress(Widget):

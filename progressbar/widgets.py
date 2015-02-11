@@ -87,8 +87,8 @@ class Timer(Widget):
     __slots__ = ('to_format',)
     TIME_SENSITIVE = True
 
-    def __init__(self, to_format='Elapsed Time: %s'):
-        self.to_format = to_format
+    def __init__(self, format_text='Elapsed Time: %s'):
+        self.format_text = format_text
 
     @staticmethod
     def format_time(seconds):
@@ -103,7 +103,7 @@ class Timer(Widget):
     def update(self, pbar):
         """Updates the widget to show the elapsed time."""
 
-        return self.to_format % self.format_time(pbar.seconds_elapsed)
+        return self.format_text % self.format_time(pbar.seconds_elapsed)
 
 
 class ETA(Timer):
@@ -129,7 +129,7 @@ class FileTransferSpeed(Widget):
 
     """Widget for showing the transfer speed (useful for file transfers)."""
 
-    to_format = '%6.2f %s%s/s'
+    format_text = '%6.2f %s%s/s'
     prefixes = ' kMGTPEZY'
     __slots__ = ('unit', 'to_format')
 
@@ -146,7 +146,7 @@ class FileTransferSpeed(Widget):
             power = int(math.log(speed, 1000))
             scaled = speed / 1000. ** power
 
-        return self.to_format % (scaled, self.prefixes[power], self.unit)
+        return self.format_text % (scaled, self.prefixes[power], self.unit)
 
 
 class AnimatedMarker(Widget):
@@ -180,11 +180,11 @@ class Counter(Widget):
 
     __slots__ = ('to_format',)
 
-    def __init__(self, to_format='%d'):
-        self.to_format = to_format
+    def __init__(self, format_text='%d'):
+        self.format_text = format_text
 
     def update(self, pbar):
-        return self.to_format % pbar.currval
+        return self.format_text % pbar.currval
 
 
 class Percentage(Widget):
@@ -211,8 +211,8 @@ class FormatLabel(Timer):
 
     __slots__ = ('to_format',)
 
-    def __init__(self, to_format):
-        self.to_format = to_format
+    def __init__(self, format_text):
+        self.format_text = format_text
 
     def update(self, pbar):
         context = {}
@@ -227,7 +227,7 @@ class FormatLabel(Timer):
             except:
                 pass
 
-        return self.to_format % context
+        return self.format_text % context
 
 
 class SimpleProgress(Widget):
